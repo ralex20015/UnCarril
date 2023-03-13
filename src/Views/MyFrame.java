@@ -8,7 +8,6 @@ import java.awt.*;
 public class MyFrame extends JFrame {
     private JPanel area;
     private HighWay highWay;
-    private HighWayLines highWayLines;
     public MyFrame(){
        setSize(600,600);
        setLocationRelativeTo(null);
@@ -26,15 +25,9 @@ public class MyFrame extends JFrame {
 
        area.setLayout(null);
        area.add(highWay);
-       highWayLines = new HighWayLines(highWay);
-
-       area.add(highWayLines);
-       highWay.add(highWayLines);
     }
 
-    public void addCarsToTheWaitList(){
-
+    public HighWay getHighWay() {
+        return highWay;
     }
-
-
 }
