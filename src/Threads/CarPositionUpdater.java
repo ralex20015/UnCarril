@@ -4,7 +4,7 @@ import Views.MyFrame;
 
 public class CarPositionUpdater implements Runnable{
     private int currentCarPosition;
-    private MyFrame frame;
+    private final MyFrame frame;
     public CarPositionUpdater(MyFrame myFrame) {
         this.frame = myFrame;
     }
@@ -16,7 +16,7 @@ public class CarPositionUpdater implements Runnable{
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-        while (currentCarPosition < 660){
+        while (currentCarPosition < 650){
             try {
                 Thread.sleep(100);
                 frame.getHighWay().getCurrentCarOnTheHighWay().updatePosition(30);

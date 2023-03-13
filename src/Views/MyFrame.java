@@ -1,13 +1,16 @@
 package Views;
 
+import Threads.CarGenerator;
 import Views.HighWay;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class MyFrame extends JFrame {
     private JPanel area;
     private HighWay highWay;
+    //ArrayList para generar los objetos carros
     public MyFrame(){
        setSize(600,600);
        setLocationRelativeTo(null);
@@ -25,6 +28,7 @@ public class MyFrame extends JFrame {
 
        area.setLayout(null);
        area.add(highWay);
+
     }
 
     public HighWay getHighWay() {
