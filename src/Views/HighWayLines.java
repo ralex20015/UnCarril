@@ -34,7 +34,6 @@ public class HighWayLines extends JPanel {
             g.setColor(Color.YELLOW);
             yPositionOfNextLine = (HEIGHT + ySpaceBetweenEachLine)*i;
             g.fillRect(xPositionOfLines,yPositionOfNextLine,WIDTH,HEIGHT);
-            System.out.println(yPositionOfNextLine);
         }
         setBackground(highWay.getHighWayColor());
 

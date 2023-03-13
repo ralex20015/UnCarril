@@ -10,6 +10,8 @@ public class HighWay extends JPanel {
     private double y;
     private Dimension dimension;
     private int startXPositionOfHighWay;
+    private int counterOfCarsFromNorthToSouth = 0;
+    private int counterOfCarsFromSouthToNorth = 0;
 
     public HighWay(MyFrame myFrame){
         dimension =  myFrame.getSize();

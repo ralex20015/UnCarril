@@ -30,10 +30,11 @@ public class MyFrame extends JFrame {
 
        area.add(highWayLines);
        highWay.add(highWayLines);
+    }
+
+    public void addCarsToTheWaitList(){
 
     }
 
-    public void setHighWay(HighWay highWay) {
-        this.highWay = highWay;
-    }
+
 }
