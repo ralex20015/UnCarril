@@ -81,7 +81,7 @@ public class Car implements Runnable {
             while (currentYPositionOfCar < 650){
                 try {
                     Thread.sleep(100);
-                    updatePosition(30);
+                    updatePosition(40);
                     System.out.println(currentYPositionOfCar);
                     highWay.repaint();
                 } catch (InterruptedException e) {
@@ -93,8 +93,7 @@ public class Car implements Runnable {
             while (currentYPositionOfCar > -60) {
                 try {
                     Thread.sleep(100);
-                    updatePosition(-30);
-                    System.out.println(currentYPositionOfCar);
+                    updatePosition(-50);
                     highWay.repaint();
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();

@@ -23,6 +23,8 @@ public class HighWay extends JPanel {
     private ArrayList<Car> listOfCarsInSouth;
     private CarGenerator carGenerator;
 
+    private int indexOfCurrentThread;
+
 
 
     public HighWay(MyFrame myFrame){
@@ -42,7 +44,7 @@ public class HighWay extends JPanel {
         thread.start();
     }
     @Override
-    public synchronized void paintComponent(Graphics g) {
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.fillRect(startXPositionOfHighWay, 0,(int)x/4,(int)y);
 
@@ -50,15 +52,26 @@ public class HighWay extends JPanel {
 
         //Ver si hay carros añadidos entonces llamar al metodo para
 
-        /*if(isThereACar){
+        if(isThereACar){
             g.setColor(currentCarOnTheHighWay.getColorSelected());
             g.fillRect(currentCarOnTheHighWay.getXPOSITION_OF_CAR(),currentCarOnTheHighWay.getCurrentYPositionOfCar(),
                     currentCarOnTheHighWay.getCAR_WIDTH(),currentCarOnTheHighWay.getCAR_HEIGHT());
             if(currentCarOnTheHighWay.isTheCarDoneHerPath()){
-                isThereACar = false;
+                /*isThereACar = false;
+                currentCarOnTheHighWay = null;
+                listOfCarsInSouth.remove(indexOfCurrentThread);
+                counterOfCarsFromSouthToNorth--;
+
+                for (int i = 0; i< listOfCarsInSouth.size();i++) {
+                    if (listOfCarsInSouth.get(i) != null) {
+                        currentCarOnTheHighWay = listOfCarsInSouth.get(i);
+                        indexOfCurrentThread = i;
+                    }
+                }*/
+                System.out.println("Carros esperando "+counterOfCarsFromSouthToNorth);
+
             }
-            System.out.println("Ya hay un carro");
-        }*/
+        }
 
         if (!isThereACar){
             paintCar(g);
@@ -81,7 +94,7 @@ public class HighWay extends JPanel {
         counterOfCarsFromNorthToSouth += numberOfCarsToAdd;
     }
 
-    public void addCarsToSouth(int numberOfCarsToAdd){
+    public synchronized void addCarsToSouth(int numberOfCarsToAdd){
         counterOfCarsFromSouthToNorth += numberOfCarsToAdd;
     }
 
@@ -94,11 +107,15 @@ public class HighWay extends JPanel {
             }
         }
     }
+    private void getNewIndex(){
+
+    }
 
     private synchronized void paintCarFromNorth(Graphics g){
         //Check if there are more than one car waiting if yes then set priority set to north
         if (listOfcarsInNorth.size() > 1){
             isCarOfNorthHavingThePriority = true;
+
         }
 
         g.setColor(currentCarOnTheHighWay.getColorSelected());
@@ -106,14 +123,11 @@ public class HighWay extends JPanel {
                 currentCarOnTheHighWay.getCAR_WIDTH(),currentCarOnTheHighWay.getCAR_HEIGHT());
         Thread thread = new Thread(currentCarOnTheHighWay);
         thread.start();
-
-        if (currentCarOnTheHighWay.isTheCarDoneHerPath()){
-            currentCarOnTheHighWay = null;
-        }
+        isThereACar = true;
     }
     private synchronized void paintCarFromSouth(Graphics g){
         if (listOfCarsInSouth.size() > 1){
-            isCarOfNorthHavingThePriority = true;
+            isCarOfNorthHavingThePriority = false;
         }
 
         g.setColor(currentCarOnTheHighWay.getColorSelected());
@@ -122,9 +136,7 @@ public class HighWay extends JPanel {
         Thread thread = new Thread(currentCarOnTheHighWay);
 
         thread.start();
-        if (currentCarOnTheHighWay.isTheCarDoneHerPath()){
-            currentCarOnTheHighWay = null;
-        }
+        isThereACar = true;
     }
 
     private boolean isThereACarWaiting(){
@@ -145,5 +157,9 @@ public class HighWay extends JPanel {
 
     public void setCurrentCarOnTheHighWay(Car currentCarOnTheHighWay) {
         this.currentCarOnTheHighWay = currentCarOnTheHighWay;
+    }
+
+    public boolean isThereACar(){
+        return isThereACar;
     }
 }

@@ -23,7 +23,7 @@ public class CarGenerator implements Runnable {
         int randomCars;
         while(true){
             try {
-                int randomSeconds = (3 + generator.nextInt(3)) * 1000;
+                int randomSeconds = (5 + generator.nextInt(4)) * 1000;
                 Thread.sleep(randomSeconds);
                 int side = 1;
 
@@ -38,7 +38,7 @@ public class CarGenerator implements Runnable {
                         listOfNorthCars.add(car);
                         System.out.println(highWay.getListOfcarsInNorth().get(i).isNorth());
                         //No hay ningun carro pasando
-                        if (highWay.getCurrentCarOnTheHighWay() == null){
+                        if (highWay.getCurrentCarOnTheHighWay() == null && !highWay.isThereACar()){
                             highWay.setCurrentCarOnTheHighWay(listOfNorthCars.get(i));
                             highWay.repaint();
                         }
@@ -51,7 +51,7 @@ public class CarGenerator implements Runnable {
                         car.setNorth(false);
                         listOfCarsInSouth.add(car);
                         //No hay ninguna carro pasando
-                        if (highWay.getCurrentCarOnTheHighWay() == null){
+                        if (highWay.getCurrentCarOnTheHighWay() == null && !highWay.isThereACar()){
                             highWay.setCurrentCarOnTheHighWay(listOfCarsInSouth.get(i));
                             highWay.repaint();
                         }
