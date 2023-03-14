@@ -26,8 +26,9 @@ public class Car implements Runnable {
     private boolean isNorth;
     private boolean isTheCarDoneHerPath;
 
-    public Car(HighWay highWay){
+    public Car(HighWay highWay, boolean isNorth){
         this.highWay = highWay;
+        this.isNorth = isNorth;
         SecureRandom generator = new SecureRandom();
         int color = generator.nextInt(7);
         colorSelected = colors[color];
@@ -78,16 +79,14 @@ public class Car implements Runnable {
             Thread.currentThread().interrupt();
         }
         if (isNorth){
-            while (currentYPositionOfCar < 650){
+            while (highWay.getCurrentCarOnTheHighWay().getCurrentYPositionOfCar() < 650){
                 try {
                     Thread.sleep(100);
-                    updatePosition(40);
-                    System.out.println(currentYPositionOfCar);
+                    updatePosition(50);
                     highWay.repaint();
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
-                System.out.println("No entra ni siquiera");
             }
         }else{
             while (currentYPositionOfCar > -60) {

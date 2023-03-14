@@ -15,7 +15,7 @@ public class CarGenerator implements Runnable {
     private HighWay highWay;
     public CarGenerator(HighWay highWay){
         this.highWay = highWay;
-        listOfNorthCars = highWay.getListOfcarsInNorth();
+        listOfNorthCars = highWay.getListOfCarsInNorth();
         listOfCarsInSouth = highWay.getListOfCarsInSouth();
     }
     @Override
@@ -23,9 +23,9 @@ public class CarGenerator implements Runnable {
         int randomCars;
         while(true){
             try {
-                int randomSeconds = (5 + generator.nextInt(4)) * 1000;
+                int randomSeconds = (3 + generator.nextInt(4)) * 1000;
                 Thread.sleep(randomSeconds);
-                int side = 1;
+                int side = generator.nextInt(2);
 
                 randomCars = 1 + generator.nextInt(3);
 
@@ -33,10 +33,8 @@ public class CarGenerator implements Runnable {
                     highWay.addCarsToNorth(randomCars);
                     for (int i = 0; i < randomCars; i++) {
                         //Este es el problema
-                        Car car = new Car(highWay);
-                        car.setNorth(true);
+                        Car car = new Car(highWay,true);
                         listOfNorthCars.add(car);
-                        System.out.println(highWay.getListOfcarsInNorth().get(i).isNorth());
                         //No hay ningun carro pasando
                         if (highWay.getCurrentCarOnTheHighWay() == null && !highWay.isThereACar()){
                             highWay.setCurrentCarOnTheHighWay(listOfNorthCars.get(i));
@@ -44,10 +42,11 @@ public class CarGenerator implements Runnable {
                         }
                     }
                     System.out.println("Se generaron "+randomCars+" en el norte");
+                    System.out.println();
                 }else{
                     highWay.addCarsToSouth(randomCars);
                     for (int i = 0; i < randomCars; i++) {
-                        Car car = new Car(highWay);
+                        Car car = new Car(highWay,false);
                         car.setNorth(false);
                         listOfCarsInSouth.add(car);
                         //No hay ninguna carro pasando
@@ -57,12 +56,11 @@ public class CarGenerator implements Runnable {
                         }
                     }
                     System.out.println("Se generaron "+randomCars+" en el sur");
+                    System.out.println();
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
         }
-
-        //If the generator produces 0 then add cars to
     }
 }

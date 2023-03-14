@@ -17,7 +17,7 @@ public class HighWay extends JPanel {
     private int counterOfCarsFromNorthToSouth = 0;
     private int counterOfCarsFromSouthToNorth = 0;
     private boolean isThereACar;
-    private boolean isTheHighWayOccupped;
+    private boolean wasTheNorthPriority;
     private boolean isCarOfNorthHavingThePriority;
     private ArrayList<Car> listOfcarsInNorth;
     private ArrayList<Car> listOfCarsInSouth;
@@ -56,19 +56,59 @@ public class HighWay extends JPanel {
             g.setColor(currentCarOnTheHighWay.getColorSelected());
             g.fillRect(currentCarOnTheHighWay.getXPOSITION_OF_CAR(),currentCarOnTheHighWay.getCurrentYPositionOfCar(),
                     currentCarOnTheHighWay.getCAR_WIDTH(),currentCarOnTheHighWay.getCAR_HEIGHT());
-            if(currentCarOnTheHighWay.isTheCarDoneHerPath()){
-                /*isThereACar = false;
-                currentCarOnTheHighWay = null;
-                listOfCarsInSouth.remove(indexOfCurrentThread);
-                counterOfCarsFromSouthToNorth--;
 
-                for (int i = 0; i< listOfCarsInSouth.size();i++) {
-                    if (listOfCarsInSouth.get(i) != null) {
-                        currentCarOnTheHighWay = listOfCarsInSouth.get(i);
-                        indexOfCurrentThread = i;
+            if(currentCarOnTheHighWay.isTheCarDoneHerPath()){
+                isThereACar = false;
+                wasTheNorthPriority = currentCarOnTheHighWay.isNorth();
+                currentCarOnTheHighWay = null;
+                //Remove the car from the ArrayList according to who was the priority
+
+                if (wasTheNorthPriority){
+                    listOfcarsInNorth.remove(indexOfCurrentThread);
+                    counterOfCarsFromNorthToSouth--;
+                    for (int i = 0; i< listOfcarsInNorth.size();i++) {
+                        if (listOfcarsInNorth.get(i) != null) {
+                            currentCarOnTheHighWay = listOfcarsInNorth.get(i);
+                            indexOfCurrentThread = i;
+                        }
                     }
-                }*/
-                System.out.println("Carros esperando "+counterOfCarsFromSouthToNorth);
+
+                    System.out.println("Carros esperando en norte: "+counterOfCarsFromNorthToSouth);
+                    if (listOfcarsInNorth.size() == 0){
+                        for (int i = 0; i< listOfCarsInSouth.size();i++) {
+                            if (listOfCarsInSouth.get(i) != null) {
+                                currentCarOnTheHighWay = listOfCarsInSouth.get(i);
+                                indexOfCurrentThread = i;
+                            }
+                        }
+                    }
+                }else{
+                    listOfCarsInSouth.remove(indexOfCurrentThread);
+                    counterOfCarsFromSouthToNorth--;
+
+                    for (int i = 0; i< listOfCarsInSouth.size();i++) {
+                        if (listOfCarsInSouth.get(i) != null) {
+                            currentCarOnTheHighWay = listOfCarsInSouth.get(i);
+                            indexOfCurrentThread = i;
+                        }
+                    }
+
+                    System.out.println("Carros esperando en sur: "+counterOfCarsFromSouthToNorth);
+                    if (listOfCarsInSouth.size() == 0){
+                        for (int i = 0; i< listOfcarsInNorth.size();i++) {
+                            if (listOfcarsInNorth.get(i) != null) {
+                                currentCarOnTheHighWay = listOfcarsInNorth.get(i);
+                                indexOfCurrentThread = i;
+                            }
+                        }
+                    }
+                }
+
+                if (isThereACarWaiting()){
+                    getPriority();
+                }
+
+
 
             }
         }
@@ -90,7 +130,7 @@ public class HighWay extends JPanel {
             g.fillRect(xPositionOfLines, yPositionOfNextLine, WIDTH, HEIGHT);
         }
     }
-    public void addCarsToNorth(int numberOfCarsToAdd){
+    public synchronized void addCarsToNorth(int numberOfCarsToAdd){
         counterOfCarsFromNorthToSouth += numberOfCarsToAdd;
     }
 
@@ -107,17 +147,8 @@ public class HighWay extends JPanel {
             }
         }
     }
-    private void getNewIndex(){
-
-    }
-
     private synchronized void paintCarFromNorth(Graphics g){
         //Check if there are more than one car waiting if yes then set priority set to north
-        if (listOfcarsInNorth.size() > 1){
-            isCarOfNorthHavingThePriority = true;
-
-        }
-
         g.setColor(currentCarOnTheHighWay.getColorSelected());
         g.fillRect(currentCarOnTheHighWay.getXPOSITION_OF_CAR(),currentCarOnTheHighWay.getCurrentYPositionOfCar(),
                 currentCarOnTheHighWay.getCAR_WIDTH(),currentCarOnTheHighWay.getCAR_HEIGHT());
@@ -126,10 +157,6 @@ public class HighWay extends JPanel {
         isThereACar = true;
     }
     private synchronized void paintCarFromSouth(Graphics g){
-        if (listOfCarsInSouth.size() > 1){
-            isCarOfNorthHavingThePriority = false;
-        }
-
         g.setColor(currentCarOnTheHighWay.getColorSelected());
         g.fillRect(currentCarOnTheHighWay.getXPOSITION_OF_CAR(),currentCarOnTheHighWay.getCurrentYPositionOfCar(),
                 currentCarOnTheHighWay.getCAR_WIDTH(),currentCarOnTheHighWay.getCAR_HEIGHT());
@@ -147,7 +174,7 @@ public class HighWay extends JPanel {
         return currentCarOnTheHighWay;
     }
 
-    public ArrayList<Car> getListOfcarsInNorth() {
+    public ArrayList<Car> getListOfCarsInNorth() {
         return listOfcarsInNorth;
     }
 
@@ -161,5 +188,36 @@ public class HighWay extends JPanel {
 
     public boolean isThereACar(){
         return isThereACar;
+    }
+
+    private void getPriority(){
+        if (wasTheNorthPriority){
+            if (listOfcarsInNorth.size() > 1){
+                isCarOfNorthHavingThePriority = true;
+                //System.out.println("Norte tiene la prioridad");
+               // System.out.println("Carros esperando en el sur: "+counterOfCarsFromSouthToNorth);
+                //System.out.println();
+            } else if (listOfCarsInSouth.size() > 1) {
+                //System.out.println("Ahora Sur tiene la prioridad");
+               // System.out.println();
+                isCarOfNorthHavingThePriority = false;
+            }
+        }else{
+            if (listOfCarsInSouth.size() > 1) {
+                isCarOfNorthHavingThePriority = false;
+               // System.out.println("Sur tiene la prioridad");
+               // System.out.println("Carros esperando en el norte: "+counterOfCarsFromNorthToSouth);
+                //System.out.println();
+
+            } else if (listOfcarsInNorth.size() > 1) {
+                isCarOfNorthHavingThePriority = true;
+                //System.out.println("Ahora norte tiene la prioridad");
+                //System.out.println();
+            }
+        }
+
+    }
+    private boolean isThereMoreCarsOnSouth(){
+        return listOfCarsInSouth.size() == 0;
     }
 }
